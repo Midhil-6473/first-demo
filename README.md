@@ -1,2 +1,3 @@
 # first-demo
-i didn't recognize the discription
+i didn't recognize the description
+author - Midhil
