@@ -312,3 +312,146 @@
 
 # # Direct access (discouraged but possible)
 # user1._protected_method()  # Works, but breaks convention
+
+#-------------------------------------------------- 11th example -----------------------------------------------------
+# Encapsulation means binding data and methods that operate on that data within a single unit or class, 
+# restricting direct access to some of the object's components.
+# class BankAccount:
+#     def __init__(self, account_number, balance):
+#         self.account_number = account_number  
+#         self.balance = balance                  
+
+#     def deposit(self, amount):
+#         if amount > 0:
+#             self.balance += amount
+#             print(f"Deposited: {amount}. New balance: {self.balance}")
+#         else:
+#             print("Deposit amount must be positive.")
+
+#     def withdraw(self, amount):
+#         if 0 < amount <= self.balance:
+#             self.balance -= amount
+#             print(f"Withdrew: {amount}. New balance: {self.balance}")
+#         else:
+#             print("Insufficient funds or invalid withdrawal amount.")
+
+#     def get_balance(self):
+#         return self.balance
+    
+# bankaccount1 = BankAccount("123456789", 1000)   
+# bankaccount1.deposit(5000)
+# bankaccount1.withdraw(2000)
+# print(f"Current Balance: {bankaccount1.get_balance()}")
+
+#-------------------------------------------------- 12th example -----------------------------------------------------
+# Abstraction is the concept of hiding the complex implementation details and showing only the essential features of the object.
+
+# class EmailServices:
+#     def _connect(self):
+#         print("Connecting to email server...")
+        
+#     def _authenticate(self):  
+#         print("Authenticating user...")
+    
+#     def send_email(self, to_address, subject, body):
+#         self._connect()           
+#         self._authenticate()       
+#         print(f"Sending email to: {to_address}\nSubject: {subject}\nBody: {body}")   
+#         self._disconnect()  
+        
+#     def _disconnect(self):
+#         print("Disconnecting from email server...")
+
+# email1 = EmailServices()
+# email1.send_email("user@example.com", "Hello", "This is a test email.")
+
+#---------------------------------------- 13th example ----------------------------------------------------
+# Inheritance means a class (child class) can inherit attributes and methods from another class (parent class).
+
+# class Vehicle:
+    
+#     def __init__(self,brand,model,year):
+#         self.model = model
+#         self.brand = brand
+#         self.price = year
+    
+#     def start(self):
+#         print("Vehicle is stopped")
+    
+#     def stop(self) :
+#         print("Vehicle stopped.")   
+        
+#     def display_info(self):
+#         print(f"Brand: {self.brand}, Model: {self.model}, Year: {self.price}")    
+        
+        
+# class Car(Vehicle):
+#     def __init__(self,brand,model,year,doors,engine_type):
+#         super().__init__(brand,model,year)
+#         self.doors = doors
+#         self.engine_type = engine_type
+        
+#     def display_info(self):      
+#         super().display_info()
+#         print(f"Doors: {self.doors}, Engine Type: {self.engine_type}")    
+
+# class Bike(Vehicle):
+#     def __init__(self,brand,model,year,type_of_bike):
+#         super().__init__(brand,model,year)
+#         self.type_of_bike = type_of_bike         
+        
+#     def display_info(self):      
+#         super().display_info()
+#         print(f"Type of Bike: {self.type_of_bike}")
+
+# class Truck(Vehicle):
+#     def __init__(self,brand,model,year,capacity):
+#         super().__init__(brand,model,year)
+#         self.capacity = capacity
+        
+#     def display_info(self):      
+#         super().display_info()
+#         print(f"Capacity: {self.capacity}")    
+
+# car1 = Car("Toyota","Camry",2020,4,"V6")
+# car1.start()
+# car1.stop()
+# car1.display_info()
+# print(car1.__dict__)
+
+# bike1 = Bike("Yamaha","YZF-R3",2021,"Sport")
+# bike1.start()   
+# bike1.stop()
+# bike1.display_info()
+
+# truck1 = Truck("Ford","F-150",2019,"2 tons")
+# truck1.start() 
+# truck1.stop()     
+# truck1.display_info()           
+
+#-------------------------------------------------- 14th example -----------------------------------------------------
+# Polymorphism means the ability to take many forms. In OOP, 
+# it refers to the ability of different classes to be treated as instances of the same class through a common interface.
+
+class Cat:
+    def sound(self):
+        print("Meow Meow")
+        
+class Cow:
+    def sound(self):
+        print("Moo Moo")
+        
+class Sheep:
+    def sound(self):
+        print("Baa Baa")
+        
+def animal_sound(animal):
+    animal.sound()    
+    
+cat1 = Cat()
+cow1 = Cow()
+sheep1 = Sheep()
+
+animal_sound(cat1)
+animal_sound(cow1)      
+                
