@@ -458,6 +458,239 @@ import tempfile
 import os
 
 
+# def split_text(text, chunk_size=500, overlap=100):
+#     chunks = []
+#     start = 0
+#     while start < len(text):
+#         end = start + chunk_size
+#         chunks.append(text[start:end])
+#         start = end - overlap
+#     return chunks
+
+
+# st.set_page_config(page_title="PDF Chatbot", layout="centered")
+# st.title("📘 Chat with your PDF")
+
+
+# if "vectorstore" not in st.session_state:
+#     st.session_state.vectorstore = None
+
+# if "messages" not in st.session_state:
+#     st.session_state.messages = []
+
+
+# uploaded_file = st.file_uploader("Upload a PDF", type="pdf")
+
+# if uploaded_file:
+#     with st.spinner("Processing PDF..."):
+
+
+#         with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
+#             tmp.write(uploaded_file.read())
+#             temp_path = tmp.name
+
+
+#         loader = PyPDFLoader(temp_path)
+#         documents = loader.load()
+
+#         full_text = "\n".join([d.page_content for d in documents])
+#         chunks = split_text(full_text)
+
+#         embeddings = OllamaEmbeddings(model="nomic-embed-text")
+#         st.session_state.vectorstore = FAISS.from_texts(chunks, embeddings)
+
+#         os.remove(temp_path)
+
+#         st.success("PDF loaded successfully!")
+
+
+# if st.session_state.vectorstore:
+
+#     llm = OllamaLLM(model="llama3.2", temperature=0)
+
+#     for msg in st.session_state.messages:
+#         with st.chat_message(msg["role"]):
+#             st.markdown(msg["content"])
+
+#     user_input = st.chat_input("Ask something from the PDF...")
+
+#     if user_input:
+
+#         st.session_state.messages.append(
+#             {"role": "user", "content": user_input}
+#         )
+
+#         with st.chat_message("user"):
+#             st.markdown(user_input)
+
+#         docs = st.session_state.vectorstore.similarity_search(user_input, k=3)
+#         context = "\n\n".join([d.page_content for d in docs])
+
+#         prompt = f"""
+# You are a helpful study assistant.
+
+# Rules:
+# - Use ONLY the provided context.
+# - Do NOT use outside knowledge.
+# - If the answer is not in the context, say:
+#   "Not found in the document."
+
+# Explain clearly in simple words.
+
+# Context:
+# {context}
+
+# Question:
+# {user_input}
+# """
+
+
+#         response = llm.invoke(prompt)
+
+#         with st.chat_message("assistant"):
+#             st.markdown(response)
+
+#         st.session_state.messages.append(
+#             {"role": "assistant", "content": response}
+#         )
+
+# import re
+
+# llm = OllamaLLM(
+#     model = "llama3.2",
+#     temperature = 0.8
+# )
+
+# def decision_maker(user_input: str) -> str:
+#     prompt = f"""
+# You are a router.
+
+# Decide what action is needed.
+
+# Actions:
+# - CALCULATE (math)
+# - SEARCH_PDF (questions about document)
+# - CHAT (normal conversation)
+
+# Respond with ONLY ONE WORD.
+
+# User query:
+# {user_input}
+# """
+#     return llm.invoke(prompt).strip()
+
+
+# def calculate(text: str) -> str:
+#     try:
+#         expression = "".join(re.findall(r"[0-9+\-*/().]", text))
+#         return str(eval(expression))
+#     except Exception:
+#         return "Invalid calculation"
+
+# def chat(text: str) -> str:
+#     return llm.invoke(text) 
+
+# def split_text(text, chunk_size=500, overlap=100):
+#     chunks = []
+#     start = 0
+#     while start < len(text):
+#         end = start + chunk_size
+#         chunks.append(text[start:end])
+#         start = end - overlap
+#     return chunks   
+
+# load_pdf = PyPDFLoader("Data mining.pdf")
+# documents = load_pdf.load()
+
+# full_text = "\n".join([d.page_content for d in documents])
+# chunks = split_text(full_text)
+
+# embeddings = OllamaEmbeddings(model="nomic-embed-text")
+# vectorstore = FAISS.from_texts(chunks,embeddings)    
+
+# def search_pdf(query: str) -> str:
+#     docs = vectorstore.similarity_search(query, k=5)
+#     if not docs:
+#         return "No relevant information found in the document."
+#     return "\n\n".join([d.page_content for d in docs])
+
+# def agent(user_input: str) -> str:
+#     decision = decision_maker(user_input)
+
+#     if decision.lower() == "calculate":
+#         return calculate(user_input)
+#     elif decision.lower() == "search_pdf":
+#         context = search_pdf(user_input)
+#         prompt = f"""
+# Answer ONLY using the context below.
+# If not found, say: Not found in the document.
+
+# Context:
+# {context}
+
+# Question:
+# {user_input}
+# """
+#         return llm.invoke(prompt)
+#     else:
+#         return chat(user_input)
+    
+# while True:
+#     user_input = input("You: ")
+#     if user_input.lower() in ["exit", "quit"]:
+#         print("Goodbye!")
+#         break
+#     response = agent("AI: " + user_input)
+#     print(response)
+
+
+# def split_text(text, chunk_size=500, overlap=100):
+#     chunks = []
+#     start = 0
+#     while start < len(text):
+#         end = start + chunk_size
+#         chunks.append(text[start:end])
+#         start = end - overlap
+#     return chunks   
+
+# load_pdf = PyPDFLoader("Data mining.pdf")
+# documents = load_pdf.load()
+
+# full_text = "\n".join([d.page_content for d in documents])
+# chunks = split_text(full_text)
+
+# embeddings = OllamaEmbeddings(model="nomic-embed-text")
+# vectorstore = FAISS.from_texts(chunks,embeddings) 
+
+# retriever = vectorstore.as_retriever(search_kwargs = {"k": 5})
+
+# prompt = ChatPromptTemplate.from_messages([
+#     ("system", 
+#      "You are a helpful assistant. "
+#      "Answer ONLY using the provided context. "
+#      "If the answer is not in the context, say 'Not found in the document.'"),
+#     ("human", "{question}")
+# ])
+
+# llm = OllamaLLM(model="llama3.2", temperature=0.5)
+
+# chain = ({
+#     "context":retriever,
+#     "question":RunnablePassthrough()
+#     | prompt
+#     | llm
+# })
+
+# while True:
+#     user_input = input("you: ")
+#     if user_input.lower() in ["exit", "quit"]:
+#         print("Goodbye!")
+#         break
+#     response = chain["question"].invoke(user_input)
+#     print("AI:", response)
+
+from langchain_core.messages import HumanMessage, AIMessage
+
 def split_text(text, chunk_size=500, overlap=100):
     chunks = []
     start = 0
@@ -465,91 +698,52 @@ def split_text(text, chunk_size=500, overlap=100):
         end = start + chunk_size
         chunks.append(text[start:end])
         start = end - overlap
-    return chunks
+    return chunks   
 
+load_pdf = PyPDFLoader("Data mining.pdf")
+documents = load_pdf.load()
 
-st.set_page_config(page_title="PDF Chatbot", layout="centered")
-st.title("📘 Chat with your PDF")
+full_text = "\n".join([d.page_content for d in documents])
+chunks = split_text(full_text)
 
+embeddings = OllamaEmbeddings(model="nomic-embed-text")
+vectorstore = FAISS.from_texts(chunks,embeddings) 
 
-if "vectorstore" not in st.session_state:
-    st.session_state.vectorstore = None
+retriever = vectorstore.as_retriever(search_kwargs = {"k": 5})
 
-if "messages" not in st.session_state:
-    st.session_state.messages = []
+prompt = ChatPromptTemplate.from_messages([
+    ("system", 
+     "You are a helpful assistant. "
+     "Answer ONLY using the provided context. "
+     "If the answer is not in the context, say 'Not found in the document.'"),
+    ("human", "{question}")
+])
 
+llm = OllamaLLM(model="llama3.2", temperature=0.5)
 
-uploaded_file = st.file_uploader("Upload a PDF", type="pdf")
+history = []
+chain = ({
+    "context":retriever,
+    "question":RunnablePassthrough(),
+    "history":RunnablePassthrough()
+    | prompt
+    | llm
+})
 
-if uploaded_file:
-    with st.spinner("Processing PDF..."):
+def ask(question: str) -> str:
+    global history
+    message = history + [HumanMessage(content=question)]   
+    response = llm.invoke(message)
+    history.append(HumanMessage(content=question))
+    history.append(AIMessage(content=response.content))
+    return response.content
 
+ask("What is data mining?")
 
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
-            tmp.write(uploaded_file.read())
-            temp_path = tmp.name
-
-
-        loader = PyPDFLoader(temp_path)
-        documents = loader.load()
-
-        full_text = "\n".join([d.page_content for d in documents])
-        chunks = split_text(full_text)
-
-        embeddings = OllamaEmbeddings(model="nomic-embed-text")
-        st.session_state.vectorstore = FAISS.from_texts(chunks, embeddings)
-
-        os.remove(temp_path)
-
-        st.success("PDF loaded successfully!")
-
-
-if st.session_state.vectorstore:
-
-    llm = OllamaLLM(model="llama3.2", temperature=0)
-
-    for msg in st.session_state.messages:
-        with st.chat_message(msg["role"]):
-            st.markdown(msg["content"])
-
-    user_input = st.chat_input("Ask something from the PDF...")
-
-    if user_input:
-
-        st.session_state.messages.append(
-            {"role": "user", "content": user_input}
-        )
-
-        with st.chat_message("user"):
-            st.markdown(user_input)
-
-        docs = st.session_state.vectorstore.similarity_search(user_input, k=3)
-        context = "\n\n".join([d.page_content for d in docs])
-
-        prompt = f"""
-You are a helpful study assistant.
-
-Rules:
-- Use ONLY the provided context.
-- Do NOT use outside knowledge.
-- If the answer is not in the context, say:
-  "Not found in the document."
-
-Explain clearly in simple words.
-
-Context:
-{context}
-
-Question:
-{user_input}
-"""
-
-
-        response = llm.invoke(prompt)
-
-        with st.chat_message("assistant"):
-            st.markdown(response)
-
-        st.session_state.messages.append(
-            {"role": "assistant", "content": response}
-        )
+# while True:
+#     user_input = input("you: ")
+#     if user_input.lower() in ["exit", "quit"]:
+#         print("Goodbye!")
+#         break
+#     response = chain["question"].invoke(user_input)
+#     print("AI:", response)
