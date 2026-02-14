@@ -9,7 +9,7 @@ Seaborn is a high-level statistical visualization library in Python built on top
 <ul>
   <li>Statistical data visualization</li>
   <li>Exploratory Data Analysis (EDA)</li>
-  <li>Understanding relationships in datali>
+  <li>Understanding relationships in datali</li>
 </ul>
 
 <form action="https://github.com/mwaskom/seaborn-data.git">
