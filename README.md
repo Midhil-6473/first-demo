@@ -12,7 +12,4 @@ Seaborn is a high-level statistical visualization library in Python built on top
   <li>Understanding relationships in datali</li>
 </ul>
 
-<form action="https://github.com/mwaskom/seaborn-data.git">
-    <p>Click the button to go the Seaborn data repository.</p>
-    <button>Click here </button>
-</form>
+<a href="https://github.com/mwaskom/seaborn-data">Click here to view Seaborn data repository</a>
