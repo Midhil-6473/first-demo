@@ -1,8 +1,7 @@
-from pdfBot.rag import generate_answer
-from pdfBot.memory import update_memory, get_history
+from rag import agent
+# from rag import decide_tool, calculator , search_pdf , code , email_writer     # generate_answer
 
-
-print("AI PDF Chatbot (type 'exit' to quit)\n")
+print("Intelligent AI Agent (type 'exit' to quit)\n")
 
 while True:
     query = input("You: ")
@@ -10,11 +9,7 @@ while True:
     if query.lower() == ["exit","quit"]:
         break
 
-    history = get_history()
+    response = agent(query)
 
-    answer, sources = generate_answer(query, history)
+    print("\nAI:", response)
 
-    print("\nAI:", answer)
-    print("\nSources:\n", sources)
-
-    update_memory(query, answer)

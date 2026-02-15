@@ -1,7 +1,7 @@
 from langchain_ollama import OllamaLLM, OllamaEmbeddings
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_community.vectorstores import FAISS
-
+from memory import update_memory, get_history
 
 
 def split_text(text, chunk_size=500, overlap=100):
@@ -15,7 +15,7 @@ def split_text(text, chunk_size=500, overlap=100):
 
     return chunks
 
-loader = PyPDFLoader("Data Mining.pdf")
+loader = PyPDFLoader("D:\langchain_ai\Data Mining.pdf")
 docs = loader.load()
 
 full_text = "\n".join(doc.page_content for doc in docs)
@@ -44,26 +44,107 @@ def get_context_and_sources(query):
 
     return context, sources
 
+#------------------------------------- only for pdfbot-----------------------------------------
 
-def generate_answer(query, history):
-    context, sources = get_context_and_sources(query)
+# def generate_answer(query, history):
+#     context, sources = get_context_and_sources(query)
 
+#     prompt = f"""
+# You are a helpful assistant.
+
+# Use ONLY the context below.
+# If answer is not present, say "Not found in document."
+
+# Context:
+# {context}
+
+# Conversation:
+# {history}
+
+# Question:
+# {query}
+# """
+
+#     response = llm.invoke(prompt)
+
+#     return response, sources
+
+#----------------------------------------------------- tools ----------------------------------------------------
+
+def calculator(query):
+    try:
+        return str(eval(query))
+    except:
+        return "Invalid math expression"
+    
+def search_pdf(query):
+    history =  get_history()
+    answer , sources = get_context_and_sources(query,history)
+    return answer + "\n\nSources:\n" + sources
+          
+def code(query):
+    c = llm.invoke(f"write code in the : {query}")
+    return c
+
+def email_writer(query):
+    g = llm.invoke(f"write a professional email for the: {query}")     
+    return g     
+
+
+def decide_tool(query):
     prompt = f"""
-You are a helpful assistant.
+You are an intelligent router.
 
-Use ONLY the context below.
-If answer is not present, say "Not found in document."
+Choose the best tool:
 
-Context:
-{context}
+- CALCULATOR → math expressions
+- PDF → questions about documents
+- CODE → programming/code generation
+- MAIL → writing emails/messages
 
-Conversation:
-{history}
+Rules:
+- Return ONLY one word
+- No explanation
 
-Question:
-{query}
+Query: {query}
 """
 
-    response = llm.invoke(prompt)
+    return llm.invoke(prompt).strip().upper()
 
-    return response, sources
+
+tools = {
+    "CALCULATOR": calculator,
+    "PDF": search_pdf,
+    "CODE": code,
+    "MAIL": email_writer
+}
+
+
+def agent(query):
+    history = get_history()
+
+    tool_name = decide_tool(query)
+
+    tool_output = tools.get(tool_name, lambda x: "Unknown task")(query)
+
+
+    final_prompt = f"""
+You are a helpful assistant.
+
+User question:
+{query}
+
+Tool result:
+{tool_output}
+
+Conversation history:
+{history}
+
+Give a clean, natural final answer.
+"""
+
+    final_answer = llm.invoke(final_prompt)
+
+    update_memory(query, final_answer)
+
+    return final_answer
